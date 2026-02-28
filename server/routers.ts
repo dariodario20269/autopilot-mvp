@@ -18,6 +18,7 @@ import { whatsappRepliesRouter } from "./whatsapp-replies-router";
 import { paymentsRouter } from "./payments-router";
 import { analyticsRouter } from "./analytics-router";
 import { brandedPagesRouter } from "./branded-pages-router";
+import { webhooksRouter } from "./webhooks-router";
 
 export const appRouter = router({
   system: systemRouter,
@@ -28,6 +29,7 @@ export const appRouter = router({
   payments: paymentsRouter,
   analytics: analyticsRouter,
   brandedPages: brandedPagesRouter,
+  webhooks: webhooksRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
