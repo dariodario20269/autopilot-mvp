@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: autopilot-mvp
+    runtime: node
+    plan: free
+    region: frankfurt # Best for Albania/Fier
+    buildCommand: "npm install --legacy-peer-deps && npm run build"
+    startCommand: "npm run start"
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false # Set in Render Dashboard
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: WHATSAPP_API_TOKEN
+        sync: false
+      - key: WHATSAPP_BUSINESS_ACCOUNT_ID
+        sync: false
+      - key: WHATSAPP_PHONE_NUMBER_ID
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: VITE_OAUTH_PORTAL_URL
+        value: "https://oauth.manus.im"
+      - key: VITE_APP_ID
+        value: "autopilot-mvp"
+      - key: OAUTH_SERVER_URL
+        value: "https://oauth.manus.im"
+    healthCheckPath: /api/health # Optional: Add a health check endpoint to your server
