@@ -4,7 +4,6 @@
   publish = "dist/public"
 
 [functions]
-  node_bundle = true
   external_node_modules = ["pg", "mysql2"]
   included_files = ["dist/**"]
 
