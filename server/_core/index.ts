@@ -30,7 +30,7 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 const app = express();
 export { app };
 
-async function startServer() {
+export async function startServer() {
   const server = createServer(app);
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
@@ -70,6 +70,29 @@ async function startServer() {
   });
 }
 
-if (process.env.NODE_ENV !== "production" || !process.env.VERCEL) {
+// Don't start the server if we're in a serverless environment (Netlify/Vercel)
+const isServerless = process.env.NETLIFY || process.env.VERCEL || process.env.FUNCTIONS_EMULATOR;
+
+if (!isServerless) {
   startServer().catch(console.error);
+} else {
+  // In serverless, we still need to set up the app routes but not listen
+  // We'll wrap this in a way that the handler can use it
+  app.use(express.json({ limit: "50mb" }));
+  app.use(express.urlencoded({ limit: "50mb", extended: true }));
+  
+  // Health check
+  app.get("/api/health", (req, res) => {
+    res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
+  });
+
+  registerOAuthRoutes(app);
+  app.use(
+    "/api/trpc",
+    createExpressMiddleware({
+      router: appRouter,
+      createContext,
+    })
+  );
+  serveStatic(app);
 }
